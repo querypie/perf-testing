@@ -19,7 +19,8 @@ scrape_configs:
       - targets: ["localhost:3000"]
 
   # 성능 테스트 대상이 되는 리눅스 시스템에 대한 이용량 지표를 수집합니다.
-  - job_name: 'perf-testing'
+  # Node Exporter 가 실행 중인 리눅스 시스템의 IP Address 를 targets 에 추가하여 주세요.
+  - job_name: 'node-exporters'
     static_configs:
       - targets: ["172.31.13.109:9100"] # TODO: targets 의 IP Address 를 실제 리눅스 시스템의 것으로 변경하세요.
         labels:
@@ -27,9 +28,18 @@ scrape_configs:
       - targets: ["172.31.62.209:9100"] # TODO: targets 의 IP Address 를 실제 리눅스 시스템의 것으로 변경하세요.
         labels:
           instance: "mysql"
+      - targets: ["172.31.61.75:9100"] # TODO: targets 의 IP Address 를 실제 리눅스 시스템의 것으로 변경하세요.
+        labels:
+          instance: "all-in-one"
+      - targets: ["172.31.6.115:9100"] # TODO: targets 의 IP Address 를 실제 리눅스 시스템의 것으로 변경하세요.
+        labels:
+          instance: "target"
       - targets: ["172.31.48.27:9100"] # TODO: targets 의 IP Address 를 실제 리눅스 시스템의 것으로 변경하세요.
         labels:
           instance: "grafana-k6"
+      - targets: ["host.docker.internal:9100"]
+        labels:
+          instance: "host.docker.internal"
 
   # Grafana-K6 성능 테스트 프로그램의 작동 지표를 수집하는 설정은 여기에 포함되어 있지 않습니다.
   # Grafana-K6 의 작동 지표는 remote-write-receiver 기능을 통해 수집됩니다.
