@@ -14,7 +14,7 @@ RUN ls -al /build
 
 
 # Step 2: Create a lightweight image to run the k6 binary
-FROM alpine:3.20
+FROM alpine:3.22
 
 # Set the working directory
 WORKDIR /app
