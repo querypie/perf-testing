@@ -1,5 +1,5 @@
-# QueryPie ACP 전용 MySQL과 Redis를 실행합니다.
-# perf-acp-db VM에서 실행합니다.
+# Runs MySQL and Redis dedicated for QueryPie ACP.
+# Run this on the perf-acp-db VM.
 
 services:
   mysql:

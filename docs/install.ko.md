@@ -2,7 +2,7 @@
 
 인프라 구성([aws.ko.md](aws.ko.md))이 완료된 이후, 각 VM에 소프트웨어를 설치하는 방법을 안내합니다.
 
-모든 VM에서 이 리포지토리를 git clone한 후, 역할에 맞는 `docker-compose.yml`을 실행하는 방식으로 진행합니다.
+모든 VM에서 이 리포지토리를 git clone한 후, 역할에 맞는 `compose.yml`을 실행하는 방식으로 진행합니다.
 
 ---
 
@@ -11,12 +11,12 @@
 | VM | 역할 | 사용하는 compose 파일 |
 |----|------|----------------------|
 | `perf-acp-app` | QueryPie ACP 서버 | (별도 설치 가이드 참고) |
-| `perf-acp-db` | ACP용 MySQL + Redis | `acp-db/docker-compose.yml` |
-| `perf-monitor` | Prometheus + Grafana | `prometheus/docker-compose.yml`<br>`grafana/docker-compose.yml` |
-| `perf-target1` | 테스트 대상 MySQL + SSH | `target/docker-compose.yml` |
-| `perf-target2` | 테스트 대상 MySQL + SSH | `target/docker-compose.yml` |
+| `perf-acp-db` | ACP용 MySQL + Redis | `acp-db/compose.yml` |
+| `perf-monitor` | Prometheus + Grafana | `prometheus/compose.yml`<br>`grafana/compose.yml` |
+| `perf-target1` | 테스트 대상 MySQL + SSH | `target/compose.yml` |
+| `perf-target2` | 테스트 대상 MySQL + SSH | `target/compose.yml` |
 
-> **node_exporter**: 모든 VM에서 `node-exporter/docker-compose.yml`을 실행합니다.
+> **node_exporter**: 모든 VM에서 `node-exporter/compose.yml`을 실행합니다.
 
 ---
 

@@ -1,5 +1,5 @@
-# DAC 성능 테스트 대상 MySQL을 실행합니다.
-# perf-target1, perf-target2 VM에서 실행합니다.
+# Runs MySQL as the DAC performance test target.
+# Run this on the perf-target1 and perf-target2 VMs.
 
 services:
   mysql:
