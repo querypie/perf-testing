@@ -95,10 +95,10 @@ for HOST in $ACP_APP_PUBLIC $ACP_DB_PUBLIC $MONITOR_PUBLIC $TARGET1_PUBLIC $TARG
   ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SSH_USER@$HOST "
     sudo mkdir -p /usr/local/lib/docker/cli-plugins
     sudo curl -sL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
-      -o /usr/local/lib/docker/cli-plugins/docker-compose
+      -o /usr/local/lib/docker/cli-plugins/docker-compose 2>/dev/null
     sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
     docker compose version
-  " 2>/dev/null
+  "
 done
 ```
 
@@ -132,7 +132,7 @@ docker compose up -d
 for HOST in $ACP_APP_PUBLIC $ACP_DB_PUBLIC $MONITOR_PUBLIC $TARGET1_PUBLIC $TARGET2_PUBLIC; do
   echo "=== $HOST ==="
   ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SSH_USER@$HOST \
-    "cd ~/perf-testing/node-exporter && sudo docker compose up -d" 2>/dev/null
+    "cd ~/perf-testing/node-exporter && docker compose up -d" 2>/dev/null
 done
 ```
 
@@ -157,6 +157,7 @@ ssh -i $SSH_KEY $SSH_USER@$ACP_DB_PUBLIC
 ```bash
 cd ~/perf-testing/acp-db
 docker compose up -d
+sleep 10
 ```
 
 #### 동작 확인
@@ -178,6 +179,7 @@ perf-target1, perf-target2 각각에서 실행합니다.
 ```bash
 cd ~/perf-testing/target
 docker compose up -d
+sleep 10
 ```
 
 #### 동작 확인
@@ -205,7 +207,7 @@ sudo systemctl restart sshd
 #### 동작 확인
 
 ```bash
-ssh testuser@localhost "echo SSH OK"
+ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=yes testuser@localhost "echo SSH OK"
 ```
 
 #### perf-target1, perf-target2 일괄 실행
@@ -214,7 +216,7 @@ ssh testuser@localhost "echo SSH OK"
 for HOST in $TARGET1_PUBLIC $TARGET2_PUBLIC; do
   echo "=== $HOST ==="
   ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SSH_USER@$HOST "
-    cd ~/perf-testing/target && sudo docker compose up -d
+    cd ~/perf-testing/target && docker compose up -d
     sudo useradd -m testuser 2>/dev/null
     echo 'testuser:testpass' | sudo chpasswd
     sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
@@ -240,17 +242,26 @@ cd ~/perf-testing/prometheus
 vi etc/prometheus/prometheus.yml
 ```
 
-`node-exporters` 섹션의 targets에 각 VM의 **Private IP**를 입력합니다:
+`node-exporters` 섹션의 targets에 각 VM의 **Private IP**와 `instance` label을 입력합니다:
 
 ```yaml
   - job_name: 'node-exporters'
     static_configs:
-      - targets:
-          - '172.31.2.30:9100'   # perf-acp-app
-          - '172.31.10.31:9100'  # perf-acp-db
-          - '172.31.15.179:9100' # perf-monitor
-          - '172.31.11.239:9100' # perf-target1
-          - '172.31.7.106:9100'  # perf-target2
+      - targets: ['172.31.2.30:9100']
+        labels:
+          instance: 'perf-acp-app'
+      - targets: ['172.31.10.31:9100']
+        labels:
+          instance: 'perf-acp-db'
+      - targets: ['172.31.15.179:9100']
+        labels:
+          instance: 'perf-monitor'
+      - targets: ['172.31.11.239:9100']
+        labels:
+          instance: 'perf-target1'
+      - targets: ['172.31.7.106:9100']
+        labels:
+          instance: 'perf-target2'
 ```
 
 ### 4.2 Prometheus 실행
@@ -280,7 +291,7 @@ curl -s http://localhost:3000/api/health
 ```
 
 Grafana 웹 UI: `http://<perf-monitor Public IP>:3000`
-초기 계정: `admin` / `admin`
+초기 계정: `qp-admin` / `QueryPie!2024`
 
 ---
 
